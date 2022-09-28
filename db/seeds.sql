@@ -23,11 +23,11 @@ VALUES ('Software Engineer', 150000, 1),
 SELECT * FROM role;
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ('Davy', 'Jones', 2, NULL),
-    ('Edward', 'Teach', 5, 6),
-    ('Anne', 'Bonney', 6, NULL),
+VALUES ('Davy', 'Jones', 3, 1),
+    ('Edward', 'Teach', 5, 1),
+    ('Anne', 'Bonney', 6, 3),
     ('Thomas', 'Cavendish', 4, 2),
-    ('Henry', 'Every', 8, NULL),
-    ('Oliver', 'Levasseur', 5, 6);
+    ('Henry', 'Every', 8, 2),
+    ('Oliver', 'Levasseur', 6, 3);
 
 SELECT * FROM employee;
