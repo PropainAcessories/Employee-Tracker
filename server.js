@@ -1,10 +1,12 @@
+require('dotenv').config();
 const express = require('express');
 const inquirer = require('inquirer');
 const mysql = require('mysql2/promise');
 const db = require('./config/connection');
-const cTable = require('console.table')
+const cTable = require('console.table');
+const { response } = require('express');
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 const app = express();
 
 app.use(express.urlencoded({ extended: false }));
@@ -18,25 +20,23 @@ app.use((req, res) => {
 // Start sever after connecting to Database.
 db.connect(err => {
     if (err) throw err;
-    app.listen(PORT, () => {})
+    app.listen(PORT, () => {});
 });
 
 // Inquirer questions
-const startPrompt = async () => {
-    await inquirer.prompt({
+ startPrompt = () => {
+    inquirer.prompt({
         type: 'list',
         name: 'menu',
         message: 'What do you want to do?',
-        loop: 'false',
         choices: [
             'View Departments', 'View Roles', 'View Employees',
-            'Add Department', 'Add Role,', 'Add Employee', 
+            'Add Department', 'Add Role', 'Add Employee', 
             'Update Employee', 'Update Manager','Delete Department',
             'Delete Role', 'Delete Employee'
         ],
-    });
-    await (answer => {
-        switch (answer.menu) {
+    }).then(response => {
+        switch (response.menu) {
             case 'View Departments':
                 viewDepartments();
                 break;
@@ -71,22 +71,22 @@ const startPrompt = async () => {
                 deleteEmployee();
                 break;
         };
-    });
+    })
 };
 
-const viewDepartments = () => {
+viewDepartments = () => {
     const sql = `SELECT * FROM department`;
     db.query(sql, (err, result) => {
         if (err) {
             res.status(500).json({ error: err.message })
-            return
+            return;
         }
         console.table(result);
         startPrompt();
     });
 };
 
-const viewRoles = () => {
+viewRoles = () => {
     const sql = `SELECT * FROM role`;
     db.query(sql, (err, result) => {
         if (err) {
@@ -98,12 +98,12 @@ const viewRoles = () => {
     })
 };
 
-const viewEmployees = () => {
+viewEmployees = () => {
     const sql = `SELECT employee.id,
                 employee.first_name,
                 employee.last_name,
                 role.title AS job_title,
-                department.department_name,
+                department.name,
                 role.salary,
                 CONCAT(manager.first_name, '  ' , manager.last_name) AS manager
                 FROM employee
@@ -118,15 +118,14 @@ const viewEmployees = () => {
     });
 };
 
-const addDepartment = async () => {
-    await inquirer.prompt([
+addDepartment = () => {
+    inquirer.prompt([
         {
             name: 'department_name',
             type: 'input',
             message: 'Please enter the name of the department you want to add'
         }
-    ]);
-    await((answer) => {
+    ]).then((answer) => {
         const sql = `INSERT INTO department (name)
                     VALUES(?)`;
         const params = [answer.department_name];
@@ -146,8 +145,8 @@ const addDepartment = async () => {
     });
 };
 
-const addRole = async () => {
-    await inquirer.prompt([
+addRole = () => {
+    inquirer.prompt([
         {
             name: 'title',
             type: 'input',
@@ -163,8 +162,7 @@ const addRole = async () => {
             type: 'number',
             message: 'Enter the department ID number for this role.'
         }
-    ]);
-    await ((response)=> {
+    ]).then((response)=> {
         db.query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)",[response.title, response.salary, response.department_id], (err, data) => {
             if (err) throw (err);
             console.log('New Role Added');
@@ -181,8 +179,8 @@ const addRole = async () => {
     });
 };
 
-const addEmployee = async () => {
-    await inquirer.prompt([
+addEmployee = () => {
+    inquirer.prompt([
         {
             name: 'first_name',
             type: 'input',
@@ -203,8 +201,7 @@ const addEmployee = async () => {
             type: 'number',
             message: 'Please enter Manager ID number associated with the database'
         }
-    ]);
-    await ((response) => {
+    ]).then((response) => {
         db.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES(?, ?, ?, ?)", [response.first_name, response.last_name, response.role_id, reponse.manager_id], (err, data) =>{
             if (err) throw err;
             console.table('New employee added.');
@@ -221,8 +218,8 @@ const addEmployee = async () => {
     });
 };
 
-const updateEmployee = async () => {
-    await inquirer.prompt([
+updateEmployee = () => {
+    inquirer.prompt([
         {
             name: 'first_name',
             type: 'input',
@@ -233,8 +230,7 @@ const updateEmployee = async () => {
             type: "number",
             message:'enter the role ID number associated with the employee.'
         }
-    ]);
-    await ((response) => {
+    ]).then((response) => {
         db.query("UPDATE employee SET role_id = ? WHERE first_name = ?", [response.role_id, response.first_name], (err, data) => {
             if (err) {
                 res.status(500).json({ error: err.message })
@@ -246,8 +242,8 @@ const updateEmployee = async () => {
     });
 };
 
-const updateManager = async () => {
-    await inquirer.prompt([
+updateManager = () => {
+    inquirer.prompt([
         {
             name: 'first_name',
             type: 'input',
@@ -258,8 +254,7 @@ const updateManager = async () => {
             type: 'number',
             message: 'Enter the manager id number for the employee'
         }
-    ]);
-    await ((response) => {
+    ]).then((response) => {
         db.query("UPDATE employee SET manager_id = ? WHERE first_name = ?", [response.manager_id, response.first_name], (err,data) => {
             if (err) throw err;
             console.lof("new manager id entered.");
@@ -276,15 +271,14 @@ const updateManager = async () => {
     });
 };
 
-const deleteDepartment = async () => {
-    await inquirer.prompt([
+deleteDepartment = () => {
+    inquirer.prompt([
         {
             name: 'department_id',
             type: 'number',
             message: 'Enter the department ID number you are removing'
         }
-    ]);
-    await ((response) => {
+    ]).then((response) => {
         db.query("DELETE FROM department WHERE id = ?", [response.department_id], (err, data) => {
             if (err) throw err;
             console.log("Role removed.");
@@ -301,15 +295,14 @@ const deleteDepartment = async () => {
     });
 };
 
-const deleteRole = async () => {
-    await inquirer.prompt([
+deleteRole = () => {
+    inquirer.prompt([
         {
             name: 'role_id',
             type: 'number',
             message: 'enter the role ID number you want to remove'
         }
-    ]);
-    await((response) => {
+    ]).then((response) => {
         db.query("DELETE FROM role WHERE ID = ?", [response.role_id], (err, data)=> {
             if (err) throw err;
             console.log('Role removed');
@@ -326,15 +319,14 @@ const deleteRole = async () => {
     });
 };
 
-const deleteEmployee = async () => {
-    await inquirer.prompt([
+deleteEmployee = () => {
+    inquirer.prompt([
         {
             name: 'employee_id',
             type: 'number',
             message: 'Enter the employee ID number you wish to remove'
         }
-    ]);
-    await ((response)=> {
+    ]).then((response)=> {
         db.query("DELETE FROM employee WHERE id = ?", [response.employee_id], (err, data)=> {
             if (err) throw err;
             console.log("employee removed");
