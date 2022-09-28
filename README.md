@@ -16,8 +16,13 @@
   🐔[Support](#support)
 
   ## Implementation
-  🐔It will be implemented via CLI, run npm init -y, npm i, and either npm start or node server.js.
-
+  🐔It will be implemented via CLI,
+  🐔open a terminal in the db folder,
+  🐔run mysql -u root -p and enter your information
+  🐔Source the schema.sql, then the seeds.sql
+  🐔run SHOW DATABASES; it will be employee_db
+  🐔run npm init -y, npm i, in this order to install the dependencies
+  🐔and run either npm start or node server.js.
   ## Usage
   🐔It is intended for an employee database
 
