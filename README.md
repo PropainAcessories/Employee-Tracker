@@ -1,10 +1,10 @@
 
-  <h1 align="center"> README Generator.</h1>
+  <h1 align="center"> Employee Tracker</h1>
 
   ![badge](https://img.shields.io/badge/license-Open-brightgreen)<br />
 
   ## Description
-  🐔This generates custom professional-quality README files complete with chicken emoji bulleting
+  🐔It tracks employee information for a company
 
   ## Table of contents
   🐔[Description](#description)
@@ -16,10 +16,10 @@
   🐔[Support](#support)
 
   ## Implementation
-  🐔It will be implemented via command Line
+  🐔It will be implemented via CLI, run npm init -y, npm i, and either npm start or node server.js.
 
   ## Usage
-  🐔It is intended to create custom high-quality markdown files
+  🐔It is intended for an employee database
 
   ## License
   ![badge](https://img.shields.io/badge/license-Open-brightgreen)
@@ -30,19 +30,10 @@
   🐔Henry Howe
 
   ## Tests
-  🐔Yes there is a results folder with a tested markdown file
+  🐔No tests for this project
 
   ## Support
-  🐔Contact me in case of any issues<br/>
+  🐔Contact me<br/>
   🐔My Github: [PropainAcessories](https://github.com/undefined)<br/>
   <br/>
-  Email me any support questions: hhC3H8@gmail.com<br/>
-  
-  ## GIF demonstrating Application.
-  ![](Untitled_%20Aug%2030,%202022%202_53%20PM.gif)
-
-## Link to the demonstration video (google-drive)
-https://drive.google.com/file/d/188zGcogu-qd_2uVsxMC3TuFih7xVSEFC/view
-
-## Watch Link to walkthrough video
-https://watch.screencastify.com/v/EE2XHp8yEkIyKLk94Ucj
+  Email me any support questions: hhc3h8@gmail.com<br/>
