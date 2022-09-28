@@ -202,7 +202,7 @@ addEmployee = () => {
             message: 'Please enter Manager ID number associated with the database'
         }
     ]).then((response) => {
-        db.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES(?, ?, ?, ?)", [response.first_name, response.last_name, response.role_id, reponse.manager_id], (err, data) =>{
+        db.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES(?, ?, ?, ?)", [response.first_name, response.last_name, response.role_id, response.manager_id], (err, data) =>{
             if (err) throw err;
             console.table('New employee added.');
 
@@ -236,7 +236,7 @@ updateEmployee = () => {
                 res.status(500).json({ error: err.message })
                 startPrompt();
             }
-            console.table(result);
+            console.table(response);
             startPrompt();
         });
     });
@@ -257,7 +257,7 @@ updateManager = () => {
     ]).then((response) => {
         db.query("UPDATE employee SET manager_id = ? WHERE first_name = ?", [response.manager_id, response.first_name], (err,data) => {
             if (err) throw err;
-            console.lof("new manager id entered.");
+            console.log("new manager id entered.");
 
             db.query(`SELECT * FROM employee`, (err, result) => {
                 if (err) {
