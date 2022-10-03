@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const inquirer = require('inquirer');
 const mysql = require('mysql2/promise');
-const db = require('./config/connection');
+const sequelize = require('./config/connection');
 const cTable = require('console.table');
 const { response } = require('express');
 
@@ -18,9 +18,8 @@ app.use((req, res) => {
 });
 
 // Start sever after connecting to Database.
-db.connect(err => {
-    if (err) throw err;
-    app.listen(PORT, () => {});
+sequelize.sync({ force: false }).then(() => {
+    app.listen(PORT, () => console.log('connected.'));
 });
 
 // Inquirer questions
